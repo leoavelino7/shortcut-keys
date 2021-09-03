@@ -1,8 +1,15 @@
+interface CommandLevel {
+  commandKey: string;
+  commands: string[];
+  action: Function;
+  actionName?: string;
+}
+
 class ShortcutKeys {
-  private actionsHistory = "";
+  private commandsHistory = "";
   private level = 0;
-  private actionsLevels: any = {};
-  private actionsMap = new Map();
+  private commandsLevels: Record<string, string[]> = {};
+  private commandsMap = new Map<string, CommandLevel>();
   private isSubscribed: boolean;
 
   constructor() {
@@ -14,35 +21,46 @@ class ShortcutKeys {
     this.level++;
     let extra = "";
 
-    let extraByCode = false
+    if (e.ctrlKey && e.key === "Control") return;
+    if (e.shiftKey && e.key === "Shift") return;
 
     if (e.shiftKey) extra = "shift";
     if (e.ctrlKey || e.metaKey) extra = "ctrl";
     if (e.altKey) extra = "alt";
-    if (e.code.toLowerCase() === "space") {extra = "space"; extraByCode = true};
-    // if (e.code.toLowerCase() === "enter") {extra = "enter"; extraByCode = true};
+    if (e.code.toLowerCase() === "space") extra = "space";
+    if (e.code.toLowerCase() === "enter") extra = "enter";
 
     const plus = this.level !== 1 || extra ? "+" : "";
 
-    if (extra && !extraByCode) this.level++;
+    let action = `${extra}${plus}${e.key}`.toLowerCase();
 
-    this.actionsHistory += `${extra}${plus}${e.key}`.toLowerCase();
+    console.log("ac:", action.slice(-1));
+
+    if (action.slice(-1) === "+") {
+      action = action.slice(0, -1);
+    }
+
+    // console.log(action.slice(0, -1));
+
+    this.commandsHistory += action;
   };
 
   private clearUserAction = () => {
-    this.actionsHistory = "";
+    this.commandsHistory = "";
     this.level = 0;
   };
-  private getCurrentLevel = () => this.actionsLevels[`${this.level}`];
+  private getCurrentLevel = () => this.commandsLevels[`${this.level}`];
 
   private handleEvent = (e: KeyboardEvent) => {
+    e.preventDefault();
+
     this.incrementUserAction(e);
 
     const currentLevelList = this.getCurrentLevel();
 
     if (currentLevelList) {
-      if (currentLevelList.includes(this.actionsHistory)) {
-        this.actionsMap.get(this.actionsHistory).action();
+      if (currentLevelList.includes(this.commandsHistory)) {
+        this.commandsMap.get(this.commandsHistory)?.action();
         this.clearUserAction();
       }
     } else {
@@ -53,14 +71,14 @@ class ShortcutKeys {
   private subscribe() {
     if (!this.isSubscribed) {
       this.isSubscribed = true;
-      window.addEventListener("keypress", this.handleEvent);
+      window.addEventListener("keydown", this.handleEvent);
     }
   }
 
   unsubscribe() {
     if (this.isSubscribed) {
       this.isSubscribed = false;
-      window.removeEventListener("keyup", this.handleEvent);
+      window.removeEventListener("keydown", this.handleEvent);
     }
   }
 
@@ -79,13 +97,13 @@ class ShortcutKeys {
         .split("+");
       const level = commandsSplit.length;
 
-      if (!this.actionsLevels.hasOwnProperty(level)) {
-        this.actionsLevels[`${level}`] = [];
+      if (!this.commandsLevels.hasOwnProperty(level)) {
+        this.commandsLevels[`${level}`] = [];
       }
 
-      this.actionsLevels[`${level}`].push(commandKey);
+      this.commandsLevels[`${level}`].push(commandKey);
 
-      this.actionsMap.set(commandKey, {
+      this.commandsMap.set(commandKey, {
         commandKey,
         commands: commandsSplit,
         action: event,
@@ -98,7 +116,7 @@ class ShortcutKeys {
     const combinations =
       combinationsKeys instanceof Array ? combinationsKeys : [combinationsKeys];
     combinations.forEach((commandKey) => {
-      this.actionsMap.delete(commandKey);
+      this.commandsMap.delete(commandKey);
     });
   }
 }

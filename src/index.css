@@ -1,0 +1,9 @@
+.code {
+  background: #161414;
+  color: #eee;
+  width: fit-content;
+  padding: 4px 7px;
+  border-radius: 4px;
+  
+  font-size: 14px;
+}
