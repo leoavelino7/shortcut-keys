@@ -17,10 +17,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "declaration": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "sourceMap": false
   },
   "include": [
     "src"
-  ]
+  ],
+  "exclude": ["node_modules", "dist", "rollup.config.js"]
 }

@@ -1,9 +1,6 @@
-interface CommandLevel {
-  commandKey: string;
-  commands: string[];
-  action: Function;
-  actionName?: string;
-}
+import { CommandLevel, Key, Shortcut } from "./types";
+
+const excludes: string[] = [Key.Control, Key.Shift, Key.Alt];
 
 class ShortcutKeys {
   private commandsHistory = "";
@@ -18,29 +15,27 @@ class ShortcutKeys {
   }
 
   private incrementUserAction = (e: KeyboardEvent) => {
-    this.level++;
-    let extra = "";
+    const key = e.key.toLowerCase();
+    let keys = [];
 
-    if (e.ctrlKey && e.key === "Control") return;
-    if (e.shiftKey && e.key === "Shift") return;
-
-    if (e.shiftKey) extra = "shift";
-    if (e.ctrlKey || e.metaKey) extra = "ctrl";
-    if (e.altKey) extra = "alt";
-    if (e.code.toLowerCase() === "space") extra = "space";
-    if (e.code.toLowerCase() === "enter") extra = "enter";
-
-    const plus = this.level !== 1 || extra ? "+" : "";
-
-    let action = `${extra}${plus}${e.key}`.toLowerCase();
-
-    console.log("ac:", action.slice(-1));
-
-    if (action.slice(-1) === "+") {
-      action = action.slice(0, -1);
+    if ((e.ctrlKey || e.shiftKey || e.altKey) && excludes.includes(key)) {
+      return;
     }
 
-    // console.log(action.slice(0, -1));
+    if (e.shiftKey) keys.push(Key.Shift);
+    if (e.ctrlKey || e.metaKey) keys.push(Key.Control);
+    if (e.altKey) keys.push(Key.Alt);
+
+    if (e.code === Key.Space) keys.push(Key.Space);
+    if (e.code === Key.Enter) keys.push(Key.Enter);
+
+    if (key) keys.push(key);
+
+    keys = keys.map((key) => key.trim()).filter(Boolean);
+
+    const action = keys.join("+");
+
+    this.level += keys.length;
 
     this.commandsHistory += action;
   };
@@ -49,14 +44,13 @@ class ShortcutKeys {
     this.commandsHistory = "";
     this.level = 0;
   };
-  private getCurrentLevel = () => this.commandsLevels[`${this.level}`];
 
   private handleEvent = (e: KeyboardEvent) => {
     e.preventDefault();
 
     this.incrementUserAction(e);
 
-    const currentLevelList = this.getCurrentLevel();
+    const currentLevelList = this.commandsLevels[`${this.level}`];
 
     if (currentLevelList) {
       if (currentLevelList.includes(this.commandsHistory)) {
@@ -83,7 +77,7 @@ class ShortcutKeys {
   }
 
   add(
-    combinationsKeys: string | string[],
+    combinationsKeys: Shortcut | Shortcut[],
     event: Function,
     actionName: string = ""
   ) {
@@ -93,8 +87,7 @@ class ShortcutKeys {
     combinations.forEach((commandKey) => {
       const commandsSplit = commandKey
         .replace(/\s+/g, "")
-        .toLowerCase()
-        .split("+");
+        .split("+") as Shortcut[];
       const level = commandsSplit.length;
 
       if (!this.commandsLevels.hasOwnProperty(level)) {
