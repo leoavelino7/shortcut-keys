@@ -66,13 +66,13 @@ var ShortcutKeys = /** @class */ (function () {
         this.subscribe();
     }
     ShortcutKeys.prototype.subscribe = function () {
-        if (!this.isSubscribed) {
+        if (!this.isSubscribed && typeof window !== "undefined") {
             this.isSubscribed = true;
             window.addEventListener("keydown", this.handleEvent);
         }
     };
     ShortcutKeys.prototype.unsubscribe = function () {
-        if (this.isSubscribed) {
+        if (this.isSubscribed && typeof window !== "undefined") {
             this.isSubscribed = false;
             window.removeEventListener("keydown", this.handleEvent);
         }

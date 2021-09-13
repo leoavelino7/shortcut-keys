@@ -2,6 +2,7 @@
   "name": "shortcut-keys",
   "description": "A simple Javascript utility to create keyboard shortcuts",
   "author": "leoavelino7",
+  "keywords": ["events", "combokeys", "keyboard", "shortcuts", "browser"],
   "version": "0.0.1",
   "license": "MIT",
   "repository": {

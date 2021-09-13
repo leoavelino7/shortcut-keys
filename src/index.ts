@@ -63,14 +63,14 @@ class ShortcutKeys {
   };
 
   private subscribe() {
-    if (!this.isSubscribed) {
+    if (!this.isSubscribed && typeof window !== "undefined") {
       this.isSubscribed = true;
       window.addEventListener("keydown", this.handleEvent);
     }
   }
 
   unsubscribe() {
-    if (this.isSubscribed) {
+    if (this.isSubscribed && typeof window !== "undefined") {
       this.isSubscribed = false;
       window.removeEventListener("keydown", this.handleEvent);
     }

@@ -5,6 +5,8 @@ shortcut-keys
 [![NPM Weekly Downloads](https://badgen.net/npm/dw/shortcut-keys)](https://www.npmjs.com/package/shortcut-keys)
 [![License](https://badgen.net/npm/license/shortcut-keys)](https://www.npmjs.com/package/shortcut-keys)
 
+- [x] SSR support
+
 A simple Javascript utility to create keyboard shortcuts
 
 Install with [npm](https://www.npmjs.com/), or [Yarn](https://yarnpkg.com/):
@@ -46,10 +48,10 @@ function App() {
       "}</style>
         
       <h1>Events</h1>
-      <p><code>SHIFT + J</code> count + 1</p>
-      <p><code>SHIFT + K</code> count + 2</p>
-      <p><code>Control + J</code> count + 4</p>
-      <p><code>Control + K</code> count + 4</p>
+      <p><code>shift + J</code> count + 1</p>
+      <p><code>shift + K</code> count + 2</p>
+      <p><code>control + J</code> count + 4</p>
+      <p><code>control + K</code> count + 4</p>
       <h3>Count: {count}</h3>
     </div>
   );
