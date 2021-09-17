@@ -1,18 +1,20 @@
-import { Shortcut } from "./types";
-declare class ShortcutKeys {
-    private commandsHistory;
-    private level;
-    private commandsLevels;
-    private commandsMap;
-    private isSubscribed;
-    constructor();
-    private incrementUserAction;
-    private clearUserAction;
-    private handleEvent;
-    private subscribe;
-    unsubscribe(): void;
-    add(combinationsKeys: Shortcut | Shortcut[], event: Function, actionName?: string): void;
-    remove(combinationsKeys: string | string[]): void;
+export declare enum Key {
+    Shift = "shift",
+    Control = "control",
+    Command = "cmd",
+    Alt = "alt",
+    Space = "space",
+    Enter = "enter"
 }
-declare const _default: ShortcutKeys;
-export default _default;
+declare type ModKeys = Key.Control | Key.Alt | Key.Command | Key.Shift;
+export declare type Shortcut = `${ModKeys}+${string}`;
+declare type HTMLElementWithEventListener = {
+    addEventListener: Window["addEventListener"];
+    removeEventListener: Window["removeEventListener"];
+};
+export declare const shortcutKeys: (element: HTMLElementWithEventListener) => {
+    add: (shortcut: Shortcut, handler: Function, prevent?: boolean) => void;
+    remove: (shortcut: string) => void;
+    shortcutMap: Record<string, (e: KeyboardEvent) => void>;
+};
+export {};

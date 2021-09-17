@@ -1,20 +1,25 @@
-import { CommandLevel, Key, Shortcut } from "./types";
+export enum Key {
+  Shift = "shift",
+  Control = "control",
+  Command = "cmd",
+  Alt = "alt",
+  Space = "space",
+  Enter = "enter",
+}
+
+type ModKeys = Key.Control | Key.Alt | Key.Command | Key.Shift;
+
+export type Shortcut = `${ModKeys}+${string}`;
 
 const excludes: string[] = [Key.Control, Key.Shift, Key.Alt];
 
-class ShortcutKeys {
-  private commandsHistory = "";
-  private level = 0;
-  private commandsLevels: Record<string, string[]> = {};
-  private commandsMap = new Map<string, CommandLevel>();
-  private isSubscribed: boolean;
+type HTMLElementWithEventListener = {
+  addEventListener: Window["addEventListener"];
+  removeEventListener: Window["removeEventListener"];
+};
 
-  constructor() {
-    this.isSubscribed = false;
-    this.subscribe();
-  }
-
-  private incrementUserAction = (e: KeyboardEvent) => {
+export const shortcutKeys = (element: HTMLElementWithEventListener) => {
+  const incrementUserAction = (e: KeyboardEvent) => {
     const key = e.key.toLowerCase();
     let keys = [];
 
@@ -22,8 +27,8 @@ class ShortcutKeys {
       return;
     }
 
-    if (e.shiftKey) keys.push(Key.Shift);
     if (e.ctrlKey || e.metaKey) keys.push(Key.Control);
+    if (e.shiftKey) keys.push(Key.Shift);
     if (e.altKey) keys.push(Key.Alt);
 
     if (e.code === Key.Space) keys.push(Key.Space);
@@ -33,85 +38,21 @@ class ShortcutKeys {
 
     keys = keys.map((key) => key.trim()).filter(Boolean);
 
-    const action = keys.join("+");
-
-    this.level += keys.length;
-
-    this.commandsHistory += action;
+    return keys.join("+");
   };
 
-  private clearUserAction = () => {
-    this.commandsHistory = "";
-    this.level = 0;
+  const shortcutMap: Record<string, (e: KeyboardEvent) => void> = {};
+
+  const add = (shortcut: Shortcut, handler: Function, prevent = false) => {
+    
+    shortcutMap[shortcut] = (e) => incrementUserAction(e) === shortcut ? handler(e) : undefined;
+      
+    element.addEventListener("keydown", shortcutMap[shortcut], { passive: prevent });
   };
 
-  private handleEvent = (e: KeyboardEvent) => {
-    e.preventDefault();
-
-    this.incrementUserAction(e);
-
-    const currentLevelList = this.commandsLevels[`${this.level}`];
-
-    if (currentLevelList) {
-      if (currentLevelList.includes(this.commandsHistory)) {
-        this.commandsMap.get(this.commandsHistory)?.action();
-        this.clearUserAction();
-      }
-    } else {
-      this.clearUserAction();
-    }
+  const remove = (shortcut: string) => {
+    element.removeEventListener("keydown", shortcutMap[shortcut]);
   };
 
-  private subscribe() {
-    if (!this.isSubscribed && typeof window !== "undefined") {
-      this.isSubscribed = true;
-      window.addEventListener("keydown", this.handleEvent);
-    }
-  }
-
-  unsubscribe() {
-    if (this.isSubscribed && typeof window !== "undefined") {
-      this.isSubscribed = false;
-      window.removeEventListener("keydown", this.handleEvent);
-    }
-  }
-
-  add(
-    combinationsKeys: Shortcut | Shortcut[],
-    event: Function,
-    actionName: string = ""
-  ) {
-    const combinations =
-      combinationsKeys instanceof Array ? combinationsKeys : [combinationsKeys];
-
-    combinations.forEach((commandKey) => {
-      const commandsSplit = commandKey
-        .replace(/\s+/g, "")
-        .split("+") as Shortcut[];
-      const level = commandsSplit.length;
-
-      if (!this.commandsLevels.hasOwnProperty(level)) {
-        this.commandsLevels[`${level}`] = [];
-      }
-
-      this.commandsLevels[`${level}`].push(commandKey);
-
-      this.commandsMap.set(commandKey, {
-        commandKey,
-        commands: commandsSplit,
-        action: event,
-        actionName,
-      });
-    });
-  }
-
-  remove(combinationsKeys: string | string[]) {
-    const combinations =
-      combinationsKeys instanceof Array ? combinationsKeys : [combinationsKeys];
-    combinations.forEach((commandKey) => {
-      this.commandsMap.delete(commandKey);
-    });
-  }
-}
-
-export default new ShortcutKeys();
+  return { add, remove, shortcutMap };
+};
