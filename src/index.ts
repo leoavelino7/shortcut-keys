@@ -13,13 +13,20 @@ export type Shortcut = `${ModKeys}+${string}`;
 
 const excludes: string[] = [Key.Control, Key.Shift, Key.Alt];
 
+type ShortcutValue = {
+  description: string;
+  target: (e: KeyboardEvent) => void;
+};
+
 type HTMLElementWithEventListener = {
   addEventListener: Window["addEventListener"];
   removeEventListener: Window["removeEventListener"];
 };
 
 export const shortcutKeys = (element: HTMLElementWithEventListener) => {
-  const incrementUserAction = (e: KeyboardEvent) => {
+  const shortcutMap: Record<string, ShortcutValue> = {};
+
+  const incrementUserAction = (e: KeyboardEvent, prevent: boolean) => {
     const key = e.key.toLowerCase();
     let keys = [];
 
@@ -38,21 +45,37 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
 
     keys = keys.map((key) => key.trim()).filter(Boolean);
 
-    return keys.join("+");
+    const concatKeys = keys.join("+") as Shortcut;
+
+    const eventFound = shortcutMap[concatKeys];
+
+    if (eventFound && prevent) {
+      e.preventDefault();
+    }
+
+    return concatKeys;
   };
 
-  const shortcutMap: Record<string, (e: KeyboardEvent) => void> = {};
+  const add = (
+    shortcut: Shortcut,
+    handler: Function,
+    prevent = false,
+    description = ""
+  ) => {
+    shortcutMap[shortcut] = {
+      description,
+      target: (e) =>
+        incrementUserAction(e, prevent) === shortcut ? handler(e) : undefined,
+    };
 
-  const add = (shortcut: Shortcut, handler: Function, prevent = false) => {
-    
-    shortcutMap[shortcut] = (e) => incrementUserAction(e) === shortcut ? handler(e) : undefined;
-      
-    element.addEventListener("keydown", shortcutMap[shortcut], { passive: prevent });
+    element.addEventListener("keydown", shortcutMap[shortcut].target);
   };
 
   const remove = (shortcut: string) => {
-    element.removeEventListener("keydown", shortcutMap[shortcut]);
+    element.removeEventListener("keydown", shortcutMap[shortcut]?.target);
   };
 
-  return { add, remove, shortcutMap };
+  const list = () => shortcutMap;
+
+  return { add, remove, list };
 };

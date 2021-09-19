@@ -9,7 +9,8 @@ var Key;
 })(Key || (Key = {}));
 var excludes = [Key.Control, Key.Shift, Key.Alt];
 var shortcutKeys = function (element) {
-    var incrementUserAction = function (e) {
+    var shortcutMap = {};
+    var incrementUserAction = function (e, prevent) {
         var key = e.key.toLowerCase();
         var keys = [];
         if ((e.ctrlKey || e.shiftKey || e.altKey) && excludes.includes(key)) {
@@ -28,18 +29,30 @@ var shortcutKeys = function (element) {
         if (key)
             keys.push(key);
         keys = keys.map(function (key) { return key.trim(); }).filter(Boolean);
-        return keys.join("+");
+        var concatKeys = keys.join("+");
+        var eventFound = shortcutMap[concatKeys];
+        if (eventFound && prevent) {
+            e.preventDefault();
+        }
+        return concatKeys;
     };
-    var shortcutMap = {};
-    var add = function (shortcut, handler, prevent) {
+    var add = function (shortcut, handler, prevent, description) {
         if (prevent === void 0) { prevent = false; }
-        shortcutMap[shortcut] = function (e) { return incrementUserAction(e) === shortcut ? handler(e) : undefined; };
-        element.addEventListener("keydown", shortcutMap[shortcut], { passive: prevent });
+        if (description === void 0) { description = ""; }
+        shortcutMap[shortcut] = {
+            description: description,
+            target: function (e) {
+                return incrementUserAction(e, prevent) === shortcut ? handler(e) : undefined;
+            },
+        };
+        element.addEventListener("keydown", shortcutMap[shortcut].target);
     };
     var remove = function (shortcut) {
-        element.removeEventListener("keydown", shortcutMap[shortcut]);
+        var _a;
+        element.removeEventListener("keydown", (_a = shortcutMap[shortcut]) === null || _a === void 0 ? void 0 : _a.target);
     };
-    return { add: add, remove: remove, shortcutMap: shortcutMap };
+    var list = function () { return shortcutMap; };
+    return { add: add, remove: remove, list: list };
 };
 
 export { Key, shortcutKeys };

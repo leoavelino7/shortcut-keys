@@ -8,13 +8,17 @@ export declare enum Key {
 }
 declare type ModKeys = Key.Control | Key.Alt | Key.Command | Key.Shift;
 export declare type Shortcut = `${ModKeys}+${string}`;
+declare type ShortcutValue = {
+    description: string;
+    target: (e: KeyboardEvent) => void;
+};
 declare type HTMLElementWithEventListener = {
     addEventListener: Window["addEventListener"];
     removeEventListener: Window["removeEventListener"];
 };
 export declare const shortcutKeys: (element: HTMLElementWithEventListener) => {
-    add: (shortcut: Shortcut, handler: Function, prevent?: boolean) => void;
+    add: (shortcut: Shortcut, handler: Function, prevent?: boolean, description?: string) => void;
     remove: (shortcut: string) => void;
-    shortcutMap: Record<string, (e: KeyboardEvent) => void>;
+    list: () => Record<string, ShortcutValue>;
 };
 export {};
