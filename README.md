@@ -23,15 +23,21 @@ yarn add shortcut-keys
 
 ```tsx
 import { useEffect, useState } from "react";
-import shortcutKeys from "shortcut-keys";
+import { shortcutKeys } from "shortcut-keys";
 
 function App() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    shortcutKeys.add("shift+j", () => setCount((c) => c + 1));
-    shortcutKeys.add("shift+k", () => setCount((c) => c - 1));
-    shortcutKeys.add(["control+j", "control+k"], () => setCount((c) => c + 4));
+    const windowElement = shortcutKeys(window);
+
+    windowElement.add("control+shift+j", () => setCount((c) => c + 1));
+    windowElement.add("shift+k", () => setCount((c) => c - 1));
+    windowElement.add(["control+j", "control+k"], () => setCount((c) => c + 4));
+
+    return () => {
+      windowElement.remove();
+    }
   }, []);
   
   return (
@@ -48,7 +54,7 @@ function App() {
       "}</style>
         
       <h1>Events</h1>
-      <p><code>shift + J</code> count + 1</p>
+      <p><code>control + shift + J</code> count + 1</p>
       <p><code>shift + K</code> count + 2</p>
       <p><code>control + J</code> count + 4</p>
       <p><code>control + K</code> count + 4</p>
@@ -58,4 +64,30 @@ function App() {
 }
 
 export default App;
+```
+
+### Functions description
+### **add(shortcut, handler, options)** - Add event to element
+- **shortcut** *{String or String[]} Required* - Shortcut to trigger action. Example: "control+h" or ["control+h", "control+shift+h"]
+- **handler** *{Function} Required* - Action triggered when shortcut is triggered. Example: () => console.log("hello");
+- **options** *{Object} Optional* - Extra settings.
+    - **description** *{String}* Event description,
+    - **multiPlatform** *{boolean} Required* - when true, control and command are enabled together
+    - **prevent** *{boolean} Required* - when true, activates event.preventDefault()
+
+### **remove(shortcut)** - Remove exists event to element
+- **shortcut** *Optional* - Shortcut to trigger action. Example: "control+h" or ["control+h", "control+shift+h"]. When there is no data, all element events will be removed.
+    
+### **list()** - List all events of element
+ Return object with all active event information. Example: 
+ ```.js
+  {
+    "control+h": {
+      "options": {
+        "description": "",
+        "multiPlatform": true,
+        "prevent": true
+      }
+    }
+  }
 ```

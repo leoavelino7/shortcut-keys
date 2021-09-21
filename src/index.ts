@@ -7,14 +7,16 @@ export enum Key {
   Enter = "enter",
 }
 
-type ModKeys = Key.Control | Key.Alt | Key.Command | Key.Shift;
-
-export type Shortcut = `${ModKeys}+${string}`;
+export type ShortcutOptions = {
+  prevent: boolean;
+  multiPlatform: boolean;
+  description: string;
+};
 
 const excludes: string[] = [Key.Control, Key.Shift, Key.Alt];
 
 type ShortcutValue = {
-  description: string;
+  options: ShortcutOptions;
   target: (e: KeyboardEvent) => void;
 };
 
@@ -26,7 +28,7 @@ type HTMLElementWithEventListener = {
 export const shortcutKeys = (element: HTMLElementWithEventListener) => {
   const shortcutMap: Record<string, ShortcutValue> = {};
 
-  const incrementUserAction = (e: KeyboardEvent, prevent: boolean) => {
+  const incrementUserAction = (e: KeyboardEvent, options: ShortcutOptions) => {
     const key = e.key.toLowerCase();
     let keys = [];
 
@@ -34,7 +36,11 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
       return;
     }
 
-    if (e.ctrlKey || e.metaKey) keys.push(Key.Control);
+    if (options.multiPlatform && (e.ctrlKey || e.metaKey))
+      keys.push(Key.Control);
+    else if (e.ctrlKey) keys.push(Key.Control);
+    else if (e.metaKey) keys.push(Key.Command);
+
     if (e.shiftKey) keys.push(Key.Shift);
     if (e.altKey) keys.push(Key.Alt);
 
@@ -45,11 +51,11 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
 
     keys = keys.map((key) => key.trim()).filter(Boolean);
 
-    const concatKeys = keys.join("+") as Shortcut;
+    const concatKeys = keys.join("+");
 
     const eventFound = shortcutMap[concatKeys];
 
-    if (eventFound && prevent) {
+    if (eventFound && options.prevent) {
       e.preventDefault();
     }
 
@@ -57,25 +63,60 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
   };
 
   const add = (
-    shortcut: Shortcut,
+    shortcut: string | string[],
     handler: Function,
-    prevent = false,
-    description = ""
+    options: ShortcutOptions = {
+      description: "",
+      multiPlatform: true,
+      prevent: true,
+    }
   ) => {
-    shortcutMap[shortcut] = {
-      description,
-      target: (e) =>
-        incrementUserAction(e, prevent) === shortcut ? handler(e) : undefined,
-    };
+    const shortcuts = typeof shortcut === "object" ? shortcut : [shortcut];
 
-    element.addEventListener("keydown", shortcutMap[shortcut].target);
+    shortcuts.forEach((shortcutItem) => {
+      shortcutMap[shortcutItem] = {
+        options: options,
+        target: (e) =>
+          incrementUserAction(e, options) === shortcutItem
+            ? handler(e)
+            : undefined,
+      };
+
+      element.addEventListener("keydown", shortcutMap[shortcutItem].target);
+    });
   };
 
-  const remove = (shortcut: string) => {
-    element.removeEventListener("keydown", shortcutMap[shortcut]?.target);
+  const remove = (shortcut: string = "all") => {
+    if (shortcutMap) {
+      if (shortcut === "all") {
+        Object.entries(shortcutMap).forEach(([_, { target }]) => {
+          element.removeEventListener("keydown", target);
+        });
+      } else {
+        element.removeEventListener("keydown", shortcutMap[shortcut]?.target);
+      }
+    }
   };
 
   const list = () => shortcutMap;
-
-  return { add, remove, list };
+  
+  return {
+    /**
+     * @description Add event to element
+     * @param shortcut - Required - Shortcut to trigger action. Example: "control+h" or ["control+h", "control+shift+h"]
+     * @param handler - Required - Action triggered when shortcut is triggered. Example: () => console.log("hello");
+     * @param options - Optional - Extra settings. Read the documentation {@link "https://www.npmjs.com/package/shortcut-keys"}
+     */
+    add,
+    /**
+     * @description Remove exists event to element
+     * @param shortcut - Optional - Shortcut to trigger action. Example: "control+h" or ["control+h", "control+shift+h"]. When there is no data, all element events will be removed.
+     */
+    remove,
+    /**
+     * @description List all events of element
+     * @returns Object with all active event information
+     */
+    list,
+  };
 };
