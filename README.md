@@ -7,9 +7,9 @@ shortcut-keys
 
 - [x] SSR support
 
-A simple Javascript utility to create keyboard shortcuts
+A simple Javascript utility to create keyboard shortcuts.
 
-Install with [npm](https://www.npmjs.com/), or [Yarn](https://yarnpkg.com/):
+Install with [npm](https://www.npmjs.com/), or [yarn](https://yarnpkg.com/):
 
 ```bash
 # via npm
@@ -71,9 +71,10 @@ export default App;
 - **shortcut** *{String or String[]} Required* - Shortcut to trigger action. Example: "control+h" or ["control+h", "control+shift+h"]
 - **handler** *{Function} Required* - Action triggered when shortcut is triggered. Example: () => console.log("hello");
 - **options** *{Object} Optional* - Extra settings.
-    - **description** *{String}* Event description,
-    - **multiPlatform** *{boolean} Required* - when true, control and command are enabled together
-    - **prevent** *{boolean} Required* - when true, activates event.preventDefault()
+    - **description** *{String}* - Event description.
+    - **multiPlatform** *{boolean} Required* - when true, control and command are enabled together.
+    - **prevent** *{boolean} Required* - when true, activates event.preventDefault().
+    - **eventType** *{String}* - [Event type](https://developer.mozilla.org/en-US/docs/Web/Events)
 
 ### **remove(shortcut)** - Remove exists event to element
 - **shortcut** *Optional* - Shortcut to trigger action. Example: "control+h" or ["control+h", "control+shift+h"]. When there is no data, all element events will be removed.
@@ -86,7 +87,8 @@ export default App;
       "options": {
         "description": "",
         "multiPlatform": true,
-        "prevent": true
+        "prevent": true,
+        "eventType": "keydown"
       }
     }
   }
