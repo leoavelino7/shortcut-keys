@@ -15,7 +15,7 @@ Install with [npm](https://www.npmjs.com/), or [yarn](https://yarnpkg.com/):
 # via npm
 npm install shortcut-keys
 
-# or Yarn (note that it will automatically save the package to your `dependencies` in `package.json`)
+# or yarn (note: this it will automatically save the package to your `dependencies` in `package.json`)
 yarn add shortcut-keys
 ```
 
@@ -72,15 +72,15 @@ export default App;
 - **handler** *{Function} Required* - Action triggered when shortcut is triggered. Example: () => console.log("hello");
 - **options** *{Object} Optional* - Extra settings.
     - **description** *{String}* - Event description.
-    - **multiPlatform** *{boolean} Required* - when true, control and command are enabled together.
+    - **multiPlatform** *{boolean} Required* - when true, 'control' and 'command' are enabled together.
     - **prevent** *{boolean} Required* - when true, activates event.preventDefault().
-    - **eventType** *{String}* - [Event type](https://developer.mozilla.org/en-US/docs/Web/Events)
+    - **eventType** *{String}* - Sets [event type](https://developer.mozilla.org/en-US/docs/Web/Events).
 
-### **remove(shortcut)** - Remove exists event to element
+### **remove(shortcut)** - Remove existing event to element
 - **shortcut** *Optional* - Shortcut to trigger action. Example: "control+h" or ["control+h", "control+shift+h"]. When there is no data, all element events will be removed.
     
 ### **list()** - List all events of element
- Return object with all active event information. Example: 
+ Returns object with all active events information. Example: 
  ```.js
   {
     "control+h": {
