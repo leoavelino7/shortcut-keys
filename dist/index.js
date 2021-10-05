@@ -14,6 +14,7 @@ exports.Key = void 0;
 var excludes = [exports.Key.Control, exports.Key.Shift, exports.Key.Alt];
 var shortcutKeys = function (element) {
     var shortcutMap = {};
+    var hasKey = function (obj, key) { return Object.prototype.hasOwnProperty.call(obj, key); };
     var incrementUserAction = function (e, options) {
         var key = e.key.toLowerCase();
         var keys = [];
@@ -44,16 +45,23 @@ var shortcutKeys = function (element) {
         }
         return concatKeys;
     };
-    var add = function (shortcut, handler, options) {
+    var add = function (shortcut, handler, options, nativeOptions) {
         if (options === void 0) { options = {
             description: "",
             multiPlatform: true,
             prevent: true,
             eventType: "keydown",
         }; }
-        var shortcuts = typeof shortcut === "object" ? shortcut : [shortcut];
+        if (nativeOptions === void 0) { nativeOptions = {
+            capture: undefined,
+            once: undefined,
+            passive: undefined,
+            signal: undefined,
+        }; }
+        var shortcuts = Array.isArray(shortcut) ? shortcut : [shortcut];
         shortcuts.forEach(function (shortcutItem) {
             shortcutMap[shortcutItem] = {
+                nativeOptions: nativeOptions,
                 options: options,
                 target: function (e) {
                     return incrementUserAction(e, options) === shortcutItem
@@ -61,23 +69,20 @@ var shortcutKeys = function (element) {
                         : undefined;
                 },
             };
-            element.addEventListener(options.eventType, shortcutMap[shortcutItem].target);
+            element.addEventListener(options.eventType, shortcutMap[shortcutItem].target, nativeOptions);
         });
     };
     var remove = function (shortcut) {
-        var _a;
         if (shortcut === void 0) { shortcut = "all"; }
-        if (shortcutMap) {
-            if (shortcut === "all") {
-                Object.entries(shortcutMap).forEach(function (_a) {
-                    _a[0]; var _b = _a[1], target = _b.target, options = _b.options;
-                    element.removeEventListener(options.eventType, target);
-                });
-            }
-            else {
-                element.removeEventListener(shortcutMap[shortcut].options.eventType, (_a = shortcutMap[shortcut]) === null || _a === void 0 ? void 0 : _a.target);
-            }
+        if (shortcut === "all") {
+            return Object.entries(shortcutMap).forEach(function (_a) {
+                _a[0]; var _b = _a[1], target = _b.target, options = _b.options, nativeOptions = _b.nativeOptions;
+                element.removeEventListener(options.eventType, target, nativeOptions);
+            });
         }
+        if (!hasKey(shortcutMap, shortcut))
+            return;
+        return element.removeEventListener(shortcutMap[shortcut].options.eventType, shortcutMap[shortcut].target);
     };
     var list = function () { return shortcutMap; };
     return {
