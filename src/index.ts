@@ -11,6 +11,7 @@ export type ShortcutOptions = {
   prevent: boolean;
   multiPlatform: boolean;
   description: string;
+  eventType: keyof WindowEventMap;
 };
 
 const excludes: string[] = [Key.Control, Key.Shift, Key.Alt];
@@ -69,6 +70,7 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
       description: "",
       multiPlatform: true,
       prevent: true,
+      eventType: "keydown",
     }
   ) => {
     const shortcuts = typeof shortcut === "object" ? shortcut : [shortcut];
@@ -82,24 +84,30 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
             : undefined,
       };
 
-      element.addEventListener("keydown", shortcutMap[shortcutItem].target);
+      element.addEventListener(
+        options.eventType as any,
+        shortcutMap[shortcutItem].target
+      );
     });
   };
 
   const remove = (shortcut: string = "all") => {
     if (shortcutMap) {
       if (shortcut === "all") {
-        Object.entries(shortcutMap).forEach(([_, { target }]) => {
-          element.removeEventListener("keydown", target);
+        Object.entries(shortcutMap).forEach(([_, { target, options }]) => {
+          element.removeEventListener(options.eventType as any, target);
         });
       } else {
-        element.removeEventListener("keydown", shortcutMap[shortcut]?.target);
+        element.removeEventListener(
+          shortcutMap[shortcut].options.eventType as any,
+          shortcutMap[shortcut]?.target
+        );
       }
     }
   };
 
   const list = () => shortcutMap;
-  
+
   return {
     /**
      * @description Add event to element

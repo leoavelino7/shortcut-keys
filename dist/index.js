@@ -49,6 +49,7 @@ var shortcutKeys = function (element) {
             description: "",
             multiPlatform: true,
             prevent: true,
+            eventType: "keydown",
         }; }
         var shortcuts = typeof shortcut === "object" ? shortcut : [shortcut];
         shortcuts.forEach(function (shortcutItem) {
@@ -60,7 +61,7 @@ var shortcutKeys = function (element) {
                         : undefined;
                 },
             };
-            element.addEventListener("keydown", shortcutMap[shortcutItem].target);
+            element.addEventListener(options.eventType, shortcutMap[shortcutItem].target);
         });
     };
     var remove = function (shortcut) {
@@ -69,12 +70,12 @@ var shortcutKeys = function (element) {
         if (shortcutMap) {
             if (shortcut === "all") {
                 Object.entries(shortcutMap).forEach(function (_a) {
-                    _a[0]; var target = _a[1].target;
-                    element.removeEventListener("keydown", target);
+                    _a[0]; var _b = _a[1], target = _b.target, options = _b.options;
+                    element.removeEventListener(options.eventType, target);
                 });
             }
             else {
-                element.removeEventListener("keydown", (_a = shortcutMap[shortcut]) === null || _a === void 0 ? void 0 : _a.target);
+                element.removeEventListener(shortcutMap[shortcut].options.eventType, (_a = shortcutMap[shortcut]) === null || _a === void 0 ? void 0 : _a.target);
             }
         }
     };

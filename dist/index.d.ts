@@ -10,6 +10,7 @@ export declare type ShortcutOptions = {
     prevent: boolean;
     multiPlatform: boolean;
     description: string;
+    eventType: keyof WindowEventMap;
 };
 declare type ShortcutValue = {
     options: ShortcutOptions;
