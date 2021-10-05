@@ -38,7 +38,7 @@ type HTMLElementWithEventListener = {
 export const shortcutKeys = (element: HTMLElementWithEventListener) => {
   const shortcutMap: Record<string, ShortcutValue> = {};
 
-  const hasInPrototype = <T, K extends keyof T>(obj: T, key: K) =>
+  const hasKey = <T, K extends keyof T>(obj: T, key: K) =>
     Object.prototype.hasOwnProperty.call(obj, key);
 
   const incrementUserAction = (e: KeyboardEvent, options: ShortcutOptions) => {
@@ -117,7 +117,7 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
         }
       );
     }
-    if (!hasInPrototype(shortcutMap, shortcut)) return;
+    if (!hasKey(shortcutMap, shortcut)) return;
     return element.removeEventListener("keydown", shortcutMap[shortcut].target);
   };
 
