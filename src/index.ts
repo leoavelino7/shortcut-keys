@@ -11,6 +11,7 @@ export type ShortcutOptions = {
   prevent: boolean;
   multiPlatform: boolean;
   description: string;
+  eventType: keyof WindowEventMap;
 };
 
 const excludes: string[] = [Key.Control, Key.Shift, Key.Alt];
@@ -38,8 +39,7 @@ type HTMLElementWithEventListener = {
 export const shortcutKeys = (element: HTMLElementWithEventListener) => {
   const shortcutMap: Record<string, ShortcutValue> = {};
 
-  const hasKey = <T, K extends keyof T>(obj: T, key: K) =>
-    Object.prototype.hasOwnProperty.call(obj, key);
+  const hasKey = <T, K extends keyof T>(obj: T, key: K) => Object.prototype.hasOwnProperty.call(obj, key);
 
   const incrementUserAction = (e: KeyboardEvent, options: ShortcutOptions) => {
     const key = e.key.toLowerCase();
@@ -82,13 +82,14 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
       description: "",
       multiPlatform: true,
       prevent: true,
+      eventType: "keydown",
     },
     nativeOptions: BrowserOptions = {
       capture: undefined,
       once: undefined,
       passive: undefined,
       signal: undefined,
-    }
+    },
   ): void => {
     const shortcuts = Array.isArray(shortcut) ? shortcut : [shortcut];
 
@@ -101,8 +102,9 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
             ? handler(e)
             : undefined,
       };
+
       element.addEventListener(
-        "keydown",
+        options.eventType as any,
         shortcutMap[shortcutItem].target,
         nativeOptions
       );
@@ -112,13 +114,13 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
   const remove = (shortcut: string = "all"): void => {
     if (shortcut === "all") {
       return Object.entries(shortcutMap).forEach(
-        ([_, { target, nativeOptions }]) => {
-          element.removeEventListener("keydown", target, nativeOptions);
+        ([_, { target, options, nativeOptions }]) => {
+          element.removeEventListener(options.eventType as any, target, nativeOptions);
         }
       );
     }
     if (!hasKey(shortcutMap, shortcut)) return;
-    return element.removeEventListener("keydown", shortcutMap[shortcut].target);
+    return element.removeEventListener(shortcutMap[shortcut].options.eventType as any, shortcutMap[shortcut].target);
   };
 
   const list = () => shortcutMap;
