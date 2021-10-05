@@ -16,8 +16,18 @@ export type ShortcutOptions = {
 
 const excludes: string[] = [Key.Control, Key.Shift, Key.Alt];
 
+type Undef<T> = undefined | T;
+
+type BrowserOptions = Partial<{
+  capture: Undef<boolean>;
+  once: Undef<boolean>;
+  passive: Undef<boolean>;
+  signal: Undef<AbortSignal>;
+}>;
+
 type ShortcutValue = {
   options: ShortcutOptions;
+  nativeOptions: BrowserOptions;
   target: (e: KeyboardEvent) => void;
 };
 
@@ -28,6 +38,8 @@ type HTMLElementWithEventListener = {
 
 export const shortcutKeys = (element: HTMLElementWithEventListener) => {
   const shortcutMap: Record<string, ShortcutValue> = {};
+
+  const hasKey = <T, K extends keyof T>(obj: T, key: K) => Object.prototype.hasOwnProperty.call(obj, key);
 
   const incrementUserAction = (e: KeyboardEvent, options: ShortcutOptions) => {
     const key = e.key.toLowerCase();
@@ -65,19 +77,26 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
 
   const add = (
     shortcut: string | string[],
-    handler: Function,
+    handler: (ev: KeyboardEvent) => any,
     options: ShortcutOptions = {
       description: "",
       multiPlatform: true,
       prevent: true,
       eventType: "keydown",
-    }
-  ) => {
-    const shortcuts = typeof shortcut === "object" ? shortcut : [shortcut];
+    },
+    nativeOptions: BrowserOptions = {
+      capture: undefined,
+      once: undefined,
+      passive: undefined,
+      signal: undefined,
+    },
+  ): void => {
+    const shortcuts = Array.isArray(shortcut) ? shortcut : [shortcut];
 
     shortcuts.forEach((shortcutItem) => {
       shortcutMap[shortcutItem] = {
-        options: options,
+        nativeOptions,
+        options,
         target: (e) =>
           incrementUserAction(e, options) === shortcutItem
             ? handler(e)
@@ -86,24 +105,22 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
 
       element.addEventListener(
         options.eventType as any,
-        shortcutMap[shortcutItem].target
+        shortcutMap[shortcutItem].target,
+        nativeOptions
       );
     });
   };
 
-  const remove = (shortcut: string = "all") => {
-    if (shortcutMap) {
-      if (shortcut === "all") {
-        Object.entries(shortcutMap).forEach(([_, { target, options }]) => {
-          element.removeEventListener(options.eventType as any, target);
-        });
-      } else {
-        element.removeEventListener(
-          shortcutMap[shortcut].options.eventType as any,
-          shortcutMap[shortcut]?.target
-        );
-      }
+  const remove = (shortcut: string = "all"): void => {
+    if (shortcut === "all") {
+      return Object.entries(shortcutMap).forEach(
+        ([_, { target, options, nativeOptions }]) => {
+          element.removeEventListener(options.eventType as any, target, nativeOptions);
+        }
+      );
     }
+    if (!hasKey(shortcutMap, shortcut)) return;
+    return element.removeEventListener(shortcutMap[shortcut].options.eventType as any, shortcutMap[shortcut].target);
   };
 
   const list = () => shortcutMap;
