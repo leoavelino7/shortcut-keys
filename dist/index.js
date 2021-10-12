@@ -8,7 +8,7 @@ exports.Key = void 0;
     Key["Control"] = "control";
     Key["Command"] = "cmd";
     Key["Alt"] = "alt";
-    Key["Space"] = "space";
+    Key["Space"] = " ";
     Key["Enter"] = "enter";
 })(exports.Key || (exports.Key = {}));
 var excludes = [exports.Key.Control, exports.Key.Shift, exports.Key.Alt];
@@ -31,9 +31,9 @@ var shortcutKeys = function (element) {
             keys.push(exports.Key.Shift);
         if (e.altKey)
             keys.push(exports.Key.Alt);
-        if (e.code === exports.Key.Space)
-            keys.push(exports.Key.Space);
-        if (e.code === exports.Key.Enter)
+        if (key === exports.Key.Space)
+            keys.push("space");
+        if (key === exports.Key.Enter)
             keys.push(exports.Key.Enter);
         if (key)
             keys.push(key);
@@ -60,16 +60,17 @@ var shortcutKeys = function (element) {
         }; }
         var shortcuts = Array.isArray(shortcut) ? shortcut : [shortcut];
         shortcuts.forEach(function (shortcutItem) {
-            shortcutMap[shortcutItem] = {
+            var key = shortcutItem.toLowerCase().trim();
+            shortcutMap[key] = {
                 nativeOptions: nativeOptions,
                 options: options,
                 target: function (e) {
-                    return incrementUserAction(e, options) === shortcutItem
+                    return incrementUserAction(e, options) === key
                         ? handler(e)
                         : undefined;
                 },
             };
-            element.addEventListener(options.eventType, shortcutMap[shortcutItem].target, nativeOptions);
+            element.addEventListener(options.eventType, shortcutMap[key].target, nativeOptions);
         });
     };
     var remove = function (shortcut) {

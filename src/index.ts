@@ -3,7 +3,7 @@ export enum Key {
   Control = "control",
   Command = "cmd",
   Alt = "alt",
-  Space = "space",
+  Space = " ",
   Enter = "enter",
 }
 
@@ -43,6 +43,7 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
 
   const incrementUserAction = (e: KeyboardEvent, options: ShortcutOptions) => {
     const key = e.key.toLowerCase();
+
     let keys = [];
 
     if ((e.ctrlKey || e.shiftKey || e.altKey) && excludes.includes(key)) {
@@ -57,11 +58,11 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
     if (e.shiftKey) keys.push(Key.Shift);
     if (e.altKey) keys.push(Key.Alt);
 
-    if (e.code === Key.Space) keys.push(Key.Space);
-    if (e.code === Key.Enter) keys.push(Key.Enter);
+    if (key === Key.Space) keys.push("space");
+    if (key === Key.Enter) keys.push(Key.Enter);
 
     if (key) keys.push(key);
-
+    
     keys = keys.map((key) => key.trim()).filter(Boolean);
 
     const concatKeys = keys.join("+");
@@ -94,18 +95,20 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
     const shortcuts = Array.isArray(shortcut) ? shortcut : [shortcut];
 
     shortcuts.forEach((shortcutItem) => {
-      shortcutMap[shortcutItem] = {
+      const key = shortcutItem.toLowerCase().trim();
+      
+      shortcutMap[key] = {
         nativeOptions,
         options,
         target: (e) =>
-          incrementUserAction(e, options) === shortcutItem
+          incrementUserAction(e, options) === key
             ? handler(e)
             : undefined,
       };
 
       element.addEventListener(
         options.eventType as any,
-        shortcutMap[shortcutItem].target,
+        shortcutMap[key].target,
         nativeOptions
       );
     });

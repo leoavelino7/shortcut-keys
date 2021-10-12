@@ -3,7 +3,7 @@ export declare enum Key {
     Control = "control",
     Command = "cmd",
     Alt = "alt",
-    Space = "space",
+    Space = " ",
     Enter = "enter"
 }
 export declare type ShortcutOptions = {
