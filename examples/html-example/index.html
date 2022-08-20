@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Shortcut keys - Example with HTML</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Press hotkeys to perform actions</h1>
+
+    <h2 id="textCount"></h2>
+
+    <div class="container">
+      <button onclick="dispatch({ type: 'reset' })">
+        <code>CTRL + Shift + R</code> / <code>Command + Shift + R</code> -
+        Reset
+      </button>
+
+      <button onclick="dispatch({ type: 'hide' })">
+        <code>CTRL + H</code> / <code>Command + H</code> - Hide count
+      </button>
+      <button onclick="dispatch({ type: 'show' })">
+        <code>CTRL + S</code> / <code>Command + S</code> - Show count
+      </button>
+
+      <button onclick="dispatch({ type: 'increment' })">
+        <code>Arrow Up</code> - Increment count
+      </button>
+
+      <button onclick="dispatch({ type: 'decrement' })">
+        <code>Arrow Down</code> - Decrement count
+      </button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/shortcut-keys@3.0.0/dist/index.js"></script>
+  <script>
+    var state = {
+      count: 0,
+      isShow: true
+    };
+
+    const textCount = document.querySelector("#textCount");
+
+    const updateTextCount = () => {
+      textCount.innerHTML = state.isShow ? `Count: ${state.count}` : "-";
+    }
+
+    updateTextCount();
+
+    const actions = {
+      increment: () => ({
+        ...state,
+        count: state.count + 1
+      }),
+      decrement: () => ({
+        ...state,
+        count: state.count - 1
+      }),
+      show: () => ({
+        ...state,
+        isShow: true
+      }),
+      hide: () => ({
+        ...state,
+        isShow: false
+      }),
+      reset: () => ({
+        count: 0,
+        isShow: true
+      })
+    }
+
+    const dispatch = (action) => {
+      if (actions[action.type]) {
+        state = actions[action.type]();
+        updateTextCount();
+        return;
+      }
+      throw new Error();
+    }
+
+    const windowElement = window.shortcutKeys(window);
+
+    windowElement.add("control+shift+r", () => dispatch({
+      type: "reset"
+    }));
+    windowElement.add("control+h", () => dispatch({
+      type: "hide"
+    }));
+    windowElement.add("control+s", () => dispatch({
+      type: "show"
+    }));
+    windowElement.add("arrowUp", () => dispatch({
+      type: "increment"
+    }));
+    windowElement.add("arrowDown", () => dispatch({
+      type: "decrement"
+    }));
+  </script>
+</body>
+
+</html>

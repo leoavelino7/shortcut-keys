@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+button {
+  position: relative;
+  top: 0px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid #e6e6e6;
+  background: #e6e6e6;
+  font-weight: bolder;
+  box-shadow: 1px 4px 0px 2px #00000038;
+  cursor: pointer;
+  transition: all .1s linear;
+}
+
+button:hover {
+  top: 2px;
+  box-shadow: 1px 2px 0px 2px #00000038;
+}
+
+code {
+  background: #353434;
+  color: #eee;
+  width: fit-content;
+  padding: 4px 7px;
+  border-radius: 4px;
+  font-size: 14px;
+}
