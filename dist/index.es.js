@@ -10,7 +10,9 @@ var Key;
 var excludes = [Key.Control, Key.Shift, Key.Alt];
 var shortcutKeys = function (element) {
     var shortcutMap = {};
-    var hasKey = function (obj, key) { return Object.prototype.hasOwnProperty.call(obj, key); };
+    var hasKey = function (obj, key) {
+        return Object.prototype.hasOwnProperty.call(obj, key);
+    };
     var incrementUserAction = function (e, options) {
         var key = e.key.toLowerCase();
         var keys = [];
@@ -61,9 +63,7 @@ var shortcutKeys = function (element) {
                 nativeOptions: nativeOptions,
                 options: options,
                 target: function (e) {
-                    return incrementUserAction(e, options) === key
-                        ? handler(e)
-                        : undefined;
+                    return incrementUserAction(e, options) === key ? handler(e) : undefined;
                 },
             };
             element.addEventListener(options.eventType, shortcutMap[key].target, nativeOptions);
@@ -102,5 +102,6 @@ var shortcutKeys = function (element) {
         list: list,
     };
 };
-
-export { Key, shortcutKeys };
+if (typeof window !== "undefined") {
+    window.shortcutKeys = shortcutKeys;
+}

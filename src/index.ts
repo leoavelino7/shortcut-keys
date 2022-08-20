@@ -1,4 +1,6 @@
-export enum Key {
+import { BrowserOptions, ShortcutKeys, ShortcutOptions, ShortcutValue } from "./types";
+
+enum Key {
   Shift = "shift",
   Control = "control",
   Command = "cmd",
@@ -7,39 +9,13 @@ export enum Key {
   Enter = "enter",
 }
 
-export type ShortcutOptions = {
-  prevent: boolean;
-  multiPlatform: boolean;
-  description: string;
-  eventType: keyof WindowEventMap;
-};
-
 const excludes: string[] = [Key.Control, Key.Shift, Key.Alt];
 
-type Undef<T> = undefined | T;
-
-type BrowserOptions = Partial<{
-  capture: Undef<boolean>;
-  once: Undef<boolean>;
-  passive: Undef<boolean>;
-  signal: Undef<AbortSignal>;
-}>;
-
-type ShortcutValue = {
-  options: ShortcutOptions;
-  nativeOptions: BrowserOptions;
-  target: (e: KeyboardEvent) => void;
-};
-
-type HTMLElementWithEventListener = {
-  addEventListener: Window["addEventListener"];
-  removeEventListener: Window["removeEventListener"];
-};
-
-export const shortcutKeys = (element: HTMLElementWithEventListener) => {
+const shortcutKeys: ShortcutKeys = (element) => {
   const shortcutMap: Record<string, ShortcutValue> = {};
 
-  const hasKey = <T, K extends keyof T>(obj: T, key: K) => Object.prototype.hasOwnProperty.call(obj, key);
+  const hasKey = <T, K extends keyof T>(obj: T, key: K) =>
+    Object.prototype.hasOwnProperty.call(obj, key);
 
   const incrementUserAction = (e: KeyboardEvent, options: ShortcutOptions) => {
     const key = e.key.toLowerCase();
@@ -62,7 +38,7 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
     if (key === Key.Enter) keys.push(Key.Enter);
 
     if (key) keys.push(key);
-    
+
     keys = keys.map((key) => key.trim()).filter(Boolean);
 
     const concatKeys = keys.join("+");
@@ -90,20 +66,18 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
       once: undefined,
       passive: undefined,
       signal: undefined,
-    },
+    }
   ): void => {
     const shortcuts = Array.isArray(shortcut) ? shortcut : [shortcut];
 
     shortcuts.forEach((shortcutItem) => {
       const key = shortcutItem.toLowerCase().trim();
-      
+
       shortcutMap[key] = {
         nativeOptions,
         options,
         target: (e) =>
-          incrementUserAction(e, options) === key
-            ? handler(e)
-            : undefined,
+          incrementUserAction(e, options) === key ? handler(e) : undefined,
       };
 
       element.addEventListener(
@@ -118,12 +92,19 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
     if (shortcut === "all") {
       return Object.entries(shortcutMap).forEach(
         ([_, { target, options, nativeOptions }]) => {
-          element.removeEventListener(options.eventType as any, target, nativeOptions);
+          element.removeEventListener(
+            options.eventType as any,
+            target,
+            nativeOptions
+          );
         }
       );
     }
     if (!hasKey(shortcutMap, shortcut)) return;
-    return element.removeEventListener(shortcutMap[shortcut].options.eventType as any, shortcutMap[shortcut].target);
+    return element.removeEventListener(
+      shortcutMap[shortcut].options.eventType as any,
+      shortcutMap[shortcut].target
+    );
   };
 
   const list = () => shortcutMap;
@@ -148,3 +129,13 @@ export const shortcutKeys = (element: HTMLElementWithEventListener) => {
     list,
   };
 };
+
+declare global {
+  interface Window {
+    shortcutKeys: ShortcutKeys
+  }
+}
+
+if (typeof window !== "undefined") {
+  window.shortcutKeys = shortcutKeys;
+}

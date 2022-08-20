@@ -3,15 +3,33 @@ export declare enum Key {
     Control = "control",
     Command = "cmd",
     Alt = "alt",
-    Space = "space",
+    Space = " ",
     Enter = "enter"
 }
-declare type ModKeys = Key.Control | Key.Alt | Key.Command | Key.Shift;
-export declare type Shortcut = `${ModKeys}+${string}`;
-export declare type CommandLevel = {
-    commandKey: string;
-    commands: Shortcut[];
-    action: Function;
-    actionName?: string;
+export declare type ShortcutOptions = {
+    prevent: boolean;
+    multiPlatform: boolean;
+    description: string;
+    eventType: keyof WindowEventMap;
 };
-export {};
+export declare type Undef<T> = undefined | T;
+export declare type BrowserOptions = Partial<{
+    capture: Undef<boolean>;
+    once: Undef<boolean>;
+    passive: Undef<boolean>;
+    signal: Undef<AbortSignal>;
+}>;
+export declare type ShortcutValue = {
+    options: ShortcutOptions;
+    nativeOptions: BrowserOptions;
+    target: (e: KeyboardEvent) => void;
+};
+export declare type HTMLElementWithEventListener = {
+    addEventListener: Window["addEventListener"];
+    removeEventListener: Window["removeEventListener"];
+};
+export declare type ShortcutKeys = (element: HTMLElementWithEventListener) => {
+    add: (shortcut: string | string[], handler: (event: KeyboardEvent) => any, options?: ShortcutOptions, nativeOptions?: BrowserOptions) => void;
+    remove: (shortcut?: string) => void;
+    list: () => Record<string, ShortcutValue>;
+};
