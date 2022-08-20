@@ -1,0 +1,90 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  --color-primary: 0 45 103;
+  --color-secondary: 168 127 250;
+
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  scroll-behavior: smooth;
+}
+
+*,
+button,
+input {
+  border: 0;
+  background: none;
+  font-family: "Roboto", -apple-system, system-ui, sans-serif;
+}
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+@layer components {
+  .bg-main {
+    @apply bg-gradient-to-br from-primary to-secondary;
+  }
+
+  .paper, .paper-reverse {
+    @apply relative bg-main overflow-hidden;
+  }
+
+  .paper-reverse::before,
+  .paper-reverse::after,
+  .paper::before,
+  .paper::after {
+    content: "";
+    @apply absolute rounded-full scale-150 bg-main opacity-40 w-[200px] h-[200px] xl:w-[300px] xl:h-[300px];
+  }
+
+  .paper::before {
+    @apply -left-32;
+  }
+
+  .paper::after {
+    @apply bottom-0 -right-32;
+  }
+
+  .paper-reverse::before {
+    @apply bottom-0 -left-32;
+  }
+
+  .paper-reverse::after {
+    @apply top-0 -right-32;
+  }
+
+  .menu {
+    @apply relative;
+  }
+
+  .menu li a::before {
+    content: "";
+    @apply absolute left-0 bottom-0 bg-white w-full;
+    height: 2px;
+    transform: scaleX(0);
+  }
+  
+  .menu li a:hover::before {
+    transition: all 0.2s linear;
+
+    transform: scaleX(1);
+  }
+
+  .focused { 
+    @apply focus:brightness-75 focus:outline-dashed focus:outline-1 focus:outline-black;
+  }
+}
