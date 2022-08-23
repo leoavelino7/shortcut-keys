@@ -49,56 +49,61 @@ const CodeType: FC<CodeTypeProps> = ({ children }) => (
 export default function Index() {
   return (
     <main>
-      <div className="flex flex-col paper min-h-screen pb-10">
-        <header className="relative flex flex-col md:flex-row justify-between px-5 py-10 w-full mx-auto max-w-7xl">
-          <p className="uppercase font-bold text-xl text-white mb-2 md:mb-0 mt-1">
-            Shortcut keys
-          </p>
-          <nav>
-            <ul className="menu flex flex-row gap-x-10">
-              {links.map((link) => (
-                <li
-                  key={link.to}
-                  className="text-white uppercase text-sm font-medium relative py-2 no-underline border-none"
-                >
-                  <Link to={link.to} className="focused">
-                    {link.text}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </header>
-        <section className="relative w-full m-auto max-w-7xl px-5">
-          <div className="grid grid-cols-2 items-center">
-            <div className="col-span-2 md:col-span-1 flex flex-col items-start">
-              <h2 className="text-5xl md:text-6xl font-bold text-white capitalize leading-tight">
-                Your most accessible application
-              </h2>
-              <p className="text-white text-lg md:text-xl mt-4">
-                Make it easy for your user to perform actions <br /> in your app
-                by adding shortcuts.
+      <div className="line-1">
+        <div className="et relative">
+          <div className="galaxy"></div>
+          <div className="flex flex-col paper min-h-screen pb-10">
+            <header className="relative flex flex-col md:flex-row justify-between px-5 py-10 w-full mx-auto max-w-7xl">
+              <p className="uppercase font-bold text-xl text-white mb-2 md:mb-0 mt-1 z-10">
+                Shortcut keys
               </p>
-              <div className="flex flex-row gap-4 mt-8">
-                <Link
-                  to="#quick-examples"
-                  className="text-black text-md md:text-lg bg-white font-medium py-5 px-6 rounded-tr-3xl rounded-br-3xl rounded-tl-3xl transition-all duration-75 ease-linear hover:brightness-75 focused"
-                >
-                  See quick examples
-                </Link>
+              <nav>
+                <ul className="menu flex flex-row gap-x-10 z-10">
+                  {links.map((link) => (
+                    <li
+                      key={link.to}
+                      className="text-white uppercase text-sm font-medium relative py-2 no-underline border-none"
+                    >
+                      <Link to={link.to} className="focused">
+                        {link.text}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </header>
+            <section className="relative w-full m-auto max-w-7xl px-5 z-10">
+              <div className="grid grid-cols-2 md:grid-cols-3 items-center">
+                <div className="col-span-2 md:col-span-1 flex flex-col items-start">
+                  <h2 className="text-5xl md:text-6xl font-bold text-white capitalize md:leading-[68px]">
+                    Your most <br /> accessible application
+                  </h2>
+                  <p className="text-white text-lg md:text-xl mt-4">
+                    Make it easy for your user to perform actions <br /> in your
+                    app by adding shortcuts.
+                  </p>
+                  <div className="flex flex-row gap-4 mt-8">
+                    <Link
+                      to="#quick-examples"
+                      className="text-black text-md md:text-lg bg-white font-medium py-5 px-6 rounded-tr-3xl rounded-br-3xl rounded-tl-3xl transition-all duration-75 ease-linear hover:brightness-75 focused"
+                    >
+                      See quick examples
+                    </Link>
+                  </div>
+                </div>
+                <div className="col-span-2 md:col-span-2 flex justify-end">
+                  <img
+                    src="/et.svg"
+                    className="etzinho my-10 md:my-0"
+                    alt=""
+                    width="90%"
+                    height="100%"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="col-span-2 md:col-span-1">
-              <img
-                src="/super-woman.svg"
-                className="my-10 md:my-0"
-                alt=""
-                width="500vw"
-                height="100%"
-              />
-            </div>
+            </section>
           </div>
-        </section>
+        </div>
       </div>
 
       <section
@@ -242,34 +247,30 @@ export default function Index() {
                   Installing and using <b>shortcut-keys</b> is very easy. And to
                   make your life even easier, here are some working examples.
                 </p>
-                <p className="text-md md:text-lg text-white">
-                  But if you prefer, you can also go to the next section where
-                  we detail each functionality of the library.
-                </p>
               </div>
             </div>
             <div className="col-span-2 lg:col-span-1 grid grid-cols-2 gap-10">
               {examples.map((example) => (
                 <div
                   key={example.to}
-                  className="flex flex-col justify-center items-center col-span-2 md:col-span-1 shadow-md rounded-lg py-10 px-2 bg-gray-50 bg-opacity-5"
+                  className="flex flex-col justify-center items-center col-span-2 md:col-span-1 shadow-md rounded-lg py-10 px-2 bg-gray-50"
                 >
-                  <div className="flex flex-col justify-center items-center rounded-full w-20 h-20 bg-main">
+                  <div className="flex flex-col justify-center items-center rounded-full w-20 h-20 bg-gray-200">
                     <img
                       className="object-center w-12 h-12"
                       src={example.image}
                       alt={example.title}
                     />
                   </div>
-                  <h3 className="font-bold mt-4 text-white text-md">
+                  <h3 className="font-bold mt-4 text-black text-md">
                     {example.title}
                   </h3>
-                  <p className="text-white text-center">
+                  <p className="text-black text-center">
                     {example.description}
                   </p>
                   <Link
                     to={example.to}
-                    className="mt-4 text-sm text-black bg-secondary font-medium py-2 px-6 rounded-full transition-all duration-75 ease-linear hover:brightness-75 focused"
+                    className="mt-4 text-sm text-gray-100 bg-primary font-medium py-2 px-6 rounded-full transition-all duration-75 ease-linear hover:brightness-75 focused"
                   >
                     Open example
                   </Link>
