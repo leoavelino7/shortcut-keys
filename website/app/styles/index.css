@@ -34,29 +34,21 @@ ul {
   padding-left: 0;
 }
 
-.galaxy {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  height: 2px;
-  width: 2px;
-  background-color: #fff;
-  border-radius: 50%;
-  box-shadow: -24vw -44vh 2px 2px #fff, 38vw -4vh 0px 0px #fff,
-    -20vw -48vh 1px 2px #fff, -39vw 38vh 3px 1px #fff, -42vw -11vh 0px 3px #fff,
-    12vw 15vh 3px 3px #fff, 42vw 6vh 3px 2px #fff, -8vw 9vh 0px 2px #fff,
-    34vw -38vh 1px 0px #fff, -17vw 45vh 3px 1px #fff, 22vw -36vh 3px 2px #fff,
-    -42vw 1vh 1px 0px #fff;
-  animation: zoom 10s alternate infinite;
-  z-index: 9999;
-}
-
 @keyframes zoom {
   0% {
     transform: scale(1);
   }
   100% {
     transform: scale(1.5);
+  }
+}
+
+@keyframes move {
+  0% {
+    transform: rotate(-6deg);
+  }
+  100% {
+    transform: rotate(6deg);
   }
 }
 
@@ -72,54 +64,60 @@ ul {
     );
   }
 
-  .et, .line-1 {
-    position: relative;
+  .et::before,
+  .et-wrapper::after,
+  .et::after {
+    content: "";
+    z-index: 1;
+  }
+
+  .et,
+  .et-wrapper {
+    @apply relative;
   }
 
   .et::before {
-    position: absolute;
-    content: "";
-    top: 0;
-    right: 0;
-    background: url("/line-2.svg");
-    width: 100%;
-    height: 100%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    z-index: 1;
+    @apply absolute top-0 right-0 w-full h-full bg-no-repeat bg-cover;
+    background-image: url("/line-2.svg");
   }
 
-  .line-1::after {
-    position: absolute;
-    content: "";
-    top: 0;
-    left: 0;
-    background: url("/line-3.svg");
-    width: 100%;
-    height: 100%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    z-index: 1;
+  .et-wrapper::after {
+    @apply absolute top-0 left-0 w-full h-full bg-no-repeat bg-cover;
+    background-image: url("/line-3.svg");
   }
 
   .et::after {
-    position: absolute;
-    content: "";
-    bottom: 0;
-    left: 0;
-    background: url("/line-1.svg");
-    width: 100%;
-    height: 100%;
+    @apply absolute bottom-0 left-0 w-full h-full bg-no-repeat bg-cover;
+    background-image: url("/line-1.svg");
     max-height: 500px;
-    background-repeat: repeat;
-    background-size: cover;
-    z-index: 1;
-    opacity: .7;
+    opacity: 0.7;
   }
 
-  .etzinho {
-    
-  /* animation: zoom 10s alternate infinite; */
+  .et-image {
+    animation: move 10s alternate infinite;
+  }
+
+  .galaxy {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 2px;
+    width: 2px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: -24vw -44vh 2px 2px #fff, 38vw -4vh 0px 0px #fff,
+      -20vw -48vh 1px 2px #fff, -39vw 38vh 3px 1px #fff,
+      -42vw -11vh 0px 3px #fff, 12vw 15vh 3px 3px #fff, 42vw 6vh 3px 2px #fff,
+      -8vw 9vh 0px 2px #fff, 34vw -38vh 1px 0px #fff, -17vw 45vh 3px 1px #fff,
+      22vw -36vh 3px 2px #fff, -42vw 1vh 1px 0px #fff;
+    animation: zoom 10s alternate infinite;
+    z-index: 9999;
+  }
+
+  @media (prefers-reduced-motion) {
+    .et-image, .galaxy {
+      animation: none;
+    }
   }
 
   .paper,
@@ -169,6 +167,6 @@ ul {
   }
 
   .focused {
-    @apply focus:brightness-75 focus:outline-dashed focus:outline-1 focus:outline-black;
+    @apply focus:brightness-75 focus:outline-dashed focus:outline-1 focus:outline-white;
   }
 }

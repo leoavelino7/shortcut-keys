@@ -12,25 +12,25 @@ const getExample = (project: string) =>
 const examples = [
   {
     title: "HTML 5",
-    to: getExample("html"),
+    to: getExample("html-example"),
     image: "/html.svg",
     description: "Simple project using HTML 5",
   },
   {
     title: "ReactJS",
-    to: getExample("reactjs"),
+    to: getExample("react-example"),
     image: "/reactjs.svg",
     description: "Simple project using ReactJS",
   },
   {
     title: "Remix",
-    to: getExample("remix"),
+    to: getExample("remix-example"),
     image: "/remix.svg",
     description: "Simple project using Remix",
   },
   {
     title: "NextJS",
-    to: getExample("nextjs"),
+    to: getExample("nextjs-example"),
     image: "/nextjs.svg",
     description: "Simple project using NextJS",
   },
@@ -49,8 +49,8 @@ const CodeType: FC<CodeTypeProps> = ({ children }) => (
 export default function Index() {
   return (
     <main>
-      <div className="line-1">
-        <div className="et relative">
+      <div className="et-wrapper">
+        <div className="et">
           <div className="galaxy"></div>
           <div className="flex flex-col paper min-h-screen pb-10">
             <header className="relative flex flex-col md:flex-row justify-between px-5 py-10 w-full mx-auto max-w-7xl">
@@ -94,7 +94,7 @@ export default function Index() {
                 <div className="col-span-2 md:col-span-2 flex justify-end">
                   <img
                     src="/et.svg"
-                    className="etzinho my-10 md:my-0"
+                    className="et-image my-10 md:my-0"
                     alt=""
                     width="90%"
                     height="100%"
@@ -253,27 +253,30 @@ export default function Index() {
               {examples.map((example) => (
                 <div
                   key={example.to}
-                  className="flex flex-col justify-center items-center col-span-2 md:col-span-1 shadow-md rounded-lg py-10 px-2 bg-gray-50"
+                  className="flex flex-col justify-center items-center col-span-2 md:col-span-1 shadow-md rounded-lg py-10 px-2 bg-gray-100 bg-opacity-10"
                 >
                   <div className="flex flex-col justify-center items-center rounded-full w-20 h-20 bg-gray-200">
                     <img
-                      className="object-center w-12 h-12"
                       src={example.image}
                       alt={example.title}
+                      width={48}
+                      height={48}
                     />
                   </div>
-                  <h3 className="font-bold mt-4 text-black text-md">
+                  <h3 className="font-bold mt-4 text-gray-100 text-md">
                     {example.title}
                   </h3>
-                  <p className="text-black text-center">
+                  <p className="text-gray-100 text-center">
                     {example.description}
                   </p>
-                  <Link
-                    to={example.to}
+                  <a
+                    href={example.to}
+                    target="_blank"
+                    rel="noreferrer"
                     className="mt-4 text-sm text-gray-100 bg-primary font-medium py-2 px-6 rounded-full transition-all duration-75 ease-linear hover:brightness-75 focused"
                   >
                     Open example
-                  </Link>
+                  </a>
                 </div>
               ))}
             </div>
@@ -287,8 +290,9 @@ export default function Index() {
                 to="https://github.com/leoavelino7/shortcut-keys"
                 target="_blank"
                 rel="noreferrer"
+                className="flex focused"
               >
-                <img src="/github.svg" alt="Github" className="w-8 h-8" />
+                <img src="/github.svg" alt="Github" width={32} height={32} />
               </Link>
             </div>
           </div>
