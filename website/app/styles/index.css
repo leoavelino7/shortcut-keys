@@ -53,6 +53,10 @@ ul {
 }
 
 @layer components {
+  ::selection {
+    @apply text-white bg-primary;
+  }
+
   .bg-main {
     @apply relative;
 
@@ -115,7 +119,8 @@ ul {
   }
 
   @media (prefers-reduced-motion) {
-    .et-image, .galaxy {
+    .et-image,
+    .galaxy {
       animation: none;
     }
   }
