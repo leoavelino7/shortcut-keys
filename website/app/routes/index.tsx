@@ -242,14 +242,14 @@ export default function Index() {
           <div className="flex flex-row items-center justify-between relative w-full m-auto max-w-7xl py-6">
             <p>Developed by Leonardo Avelino - 2021</p>
             <div>
-              <Link
-                to="https://github.com/leoavelino7/shortcut-keys"
+              <a
+                href="https://github.com/leoavelino7/shortcut-keys"
                 target="_blank"
                 rel="noreferrer"
                 className="flex focused"
               >
                 <img src="/github.svg" alt="Github" width={32} height={32} />
-              </Link>
+              </a>
             </div>
           </div>
         </footer>
