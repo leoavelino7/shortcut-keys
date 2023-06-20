@@ -24,23 +24,7 @@ export type BrowserOptions = Partial<{
 }>;
 
 export type ShortcutValue = {
-  options: ShortcutOptions;
+  options: Partial<ShortcutOptions>;
   nativeOptions: BrowserOptions;
-  target: (e: KeyboardEvent) => void;
-};
-
-export type HTMLElementWithEventListener = {
-  addEventListener: Window["addEventListener"];
-  removeEventListener: Window["removeEventListener"];
-};
-
-export type ShortcutKeys = (element: HTMLElementWithEventListener) => {
-  add: (
-    shortcut: string | string[],
-    handler: (event: KeyboardEvent) => any,
-    options?: ShortcutOptions,
-    nativeOptions?: BrowserOptions
-  ) => void;
-  remove: (shortcut?: string) => void;
-  list: () => Record<string, ShortcutValue>;
+  target: EventListener;
 };
