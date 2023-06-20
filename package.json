@@ -23,7 +23,8 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "start": "rollup -c -w"
+    "start": "rollup -c -w",
+    "publish": "node ./scripts/publish.js && npm publish"
   },
   "devDependencies": {
     "rollup": "^3.25.1",
