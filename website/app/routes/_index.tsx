@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import type { FC, ReactNode } from "react";
 import { Fragment } from "react";
 import { Header } from "~/components/Header";

@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { V2_MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -16,12 +16,12 @@ export function links() {
   return [{ rel: "stylesheet", href: styles }];
 }
 
-export const meta: MetaFunction = () => ({
+export const meta: V2_MetaFunction = () => [{
   charset: "utf-8",
   title: "Shortcut Keys - Documentation",
   description: "A simple Javascript utility to create keyboard shortcuts.",
   viewport: "width=device-width,initial-scale=1",
-});
+}];
 
 export function CatchBoundary() {
   return (
