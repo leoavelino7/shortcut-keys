@@ -1,23 +1,25 @@
-import typescript from "rollup-plugin-typescript2";
-import { uglify } from 'rollup-plugin-uglify';
+const typescript = require("rollup-plugin-typescript2");
+const { uglify } = require("rollup-plugin-uglify");
 
-import pkg from "./package.json";
+const pkg = require("./package.json");
 
-export default {
+exports.default = {
   input: "src/index.ts",
   output: [
     {
       file: "dist/index.min.js",
+      name: "ShortcutKeys",
       format: "iife",
       exports: "named",
       sourcemap: false,
-      plugins: [uglify()]
+      plugins: [uglify()],
     },
     {
       file: pkg.main,
+      name: "ShortcutKeys",
       format: "iife",
       exports: "named",
-      sourcemap: false
+      sourcemap: false,
     },
     {
       file: pkg.module,
@@ -30,9 +32,7 @@ export default {
       format: "esm",
       exports: "named",
       sourcemap: false,
-    }
+    },
   ],
-  plugins: [
-    typescript()
-  ]
+  plugins: [typescript()],
 };
