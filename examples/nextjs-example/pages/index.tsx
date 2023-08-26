@@ -35,14 +35,14 @@ const Home: NextPage = () => {
   useEffect(() => {
     const windowElement = window.shortcutKeys(window);
 
-    windowElement.add("control+shift+r", () => dispatch({ type: "reset" }));
+    windowElement.add("control+shift+r", () => dispatch({ type: "reset" }),);
     windowElement.add("control+h", () => dispatch({ type: "hide" }));
     windowElement.add("control+s", () => dispatch({ type: "show" }));
     windowElement.add("arrowUp", () => dispatch({ type: "increment" }));
     windowElement.add("arrowDown", () => dispatch({ type: "decrement" }));
 
     return () => {
-      windowElement.remove();
+      windowElement.removeAll();
     };
   }, []);
 

@@ -41,7 +41,7 @@ export default function Index() {
     windowElement.add("arrowDown", () => dispatch({ type: "decrement" }));
 
     return () => {
-      windowElement.remove();
+      windowElement.removeAll();
     };
   }, []);
 

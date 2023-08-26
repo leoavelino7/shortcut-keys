@@ -15,22 +15,44 @@ import styles from "./styles/dist.css";
 export const meta: V2_MetaFunction = () => {
   return [
     { title: "Shortcut Keys - Documentation" },
+    { name: "og:title", content: "Shortcut Keys - Documentation" },
     {
-      property: "og:title",
-      content: "Shortcut Keys - Documentation",
+      name: "og:description",
+      content: "A simple Javascript utility to create keyboard shortcuts.",
+    },
+    { name: "og:type", content: "website" },
+    { name: "og:url", content: "https://shortcut-keys.vercel.app/" },
+    {
+      name: "og:image",
+      content: "https://shortcut-keys.vercel.app/thumbnail.webp",
+    },
+    {
+      name: "og:image:alt",
+      content:
+        "Make it easy for your user to perform actions in your app by adding shortcuts.",
+    },
+    { name: "og:image:type", content: "image/webp" },
+    { name: "og:image:width", content: "1200" },
+    { name: "og:image:height", content: "525" },
+    { name: "og:site_name", content: "Shortcut Keys" },
+    { name: "og:locale", content: "en" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:site", content: "@leoavelino7" },
+    { name: "twitter:title", content: "Shortcut Keys - Documentation" },
+    {
+      name: "twitter:description",
+      content: "A simple Javascript utility to create keyboard shortcuts.",
+    },
+    {
+      name: "twitter:image",
+      content: "https://shortcut-keys.vercel.app/thumbnail.webp",
     },
     {
       name: "description",
       content: "A simple Javascript utility to create keyboard shortcuts.",
     },
-    {
-      name: "viewport",
-      content: "width=device-width,initial-scale=1",
-    },
-    {
-      name: "msapplication-TileColor",
-      content: "#ffffff",
-    },
+    { name: "viewport", content: "width=device-width,initial-scale=1" },
+    { name: "msapplication-TileColor", content: "#ffffff" },
     { name: "msapplication-TileImage", content: "/ms-icon-144x144.png" },
     { name: "theme-color", content: "#ffffff" },
     { charSet: "utf-8" },
