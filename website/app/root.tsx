@@ -14,6 +14,7 @@ import styles from "./styles/dist.css";
 
 export const meta: V2_MetaFunction = () => {
   return [
+    { charSet: "utf-8" },
     { title: "Shortcut Keys - Documentation" },
     { name: "og:title", content: "Shortcut Keys - Documentation" },
     {
@@ -54,8 +55,7 @@ export const meta: V2_MetaFunction = () => {
     { name: "viewport", content: "width=device-width,initial-scale=1" },
     { name: "msapplication-TileColor", content: "#ffffff" },
     { name: "msapplication-TileImage", content: "/ms-icon-144x144.png" },
-    { name: "theme-color", content: "#ffffff" },
-    { charSet: "utf-8" },
+    { name: "theme-color", content: "#ffffff" }
   ];
 };
 

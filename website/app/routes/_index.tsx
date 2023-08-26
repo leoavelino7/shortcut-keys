@@ -77,11 +77,11 @@ export default function Index() {
           <div className="flex flex-col gap-5 mt-10">
             <section>
               <hgroup>
-                <h5 className="text-xl font-bold">Add event to element</h5>
-                <h4 className="text-gray-800 font-medium mt-1">
+                <h4 className="text-xl font-bold">Add event to element</h4>
+                <p className="text-gray-800 font-medium mt-1">
                   <b>Function:</b>
                   <CodeType>add(shortcut, handler, options)</CodeType>
-                </h4>
+                </p>
               </hgroup>
               <ul className="flex flex-col gap-3 mt-4 ml-5 text-md md:text-lg list-disc">
                 <li>
@@ -128,10 +128,10 @@ export default function Index() {
             <hr className="w-full h-1 border-none rounded-lg bg-gray-200" />
             <section>
               <hgroup>
-                <h5 className="text-xl font-bold">Remove existing event</h5>
-                <h4 className="text-gray-800 font-medium mt-1">
+                <h4 className="text-xl font-bold">Remove existing event</h4>
+                <p className="text-gray-800 font-medium mt-1">
                   <b>Function:</b> <CodeType>remove(shortcut)</CodeType>
-                </h4>
+                </p>
               </hgroup>
               <ul className="flex flex-col gap-3 mt-4 ml-5 text-md md:text-lg list-disc">
                 <li>
@@ -145,21 +145,21 @@ export default function Index() {
             <hr className="w-full h-1 border-none rounded-lg bg-gray-200" />
             <section>
               <hgroup>
-                <h5 className="text-xl font-bold">
+                <h4 className="text-xl font-bold">
                   Remove all existing events
-                </h5>
-                <h4 className="text-gray-800 font-medium mt-1">
-                  <b>Function:</b> <CodeType>removeAll()</CodeType>
                 </h4>
+                <p className="text-gray-800 font-medium mt-1">
+                  <b>Function:</b> <CodeType>removeAll()</CodeType>
+                </p>
               </hgroup>
             </section>
             <hr className="w-full h-1 border-none rounded-lg bg-gray-200" />
             <section>
               <hgroup>
-                <h5 className="text-xl font-bold">List all existing events</h5>
-                <h4 className="text-gray-800 font-medium mt-1">
+                <h4 className="text-xl font-bold">List all existing events</h4>
+                <p className="text-gray-800 font-medium mt-1">
                   <b>Function:</b> <CodeType>list()</CodeType>
-                </h4>
+                </p>
               </hgroup>
 
               <ul className="flex flex-col gap-3 mt-4 ml-5 text-md md:text-lg list-disc">
@@ -205,6 +205,7 @@ export default function Index() {
                 >
                   <div className="flex flex-col justify-center items-center rounded-full w-20 h-20 bg-gray-200">
                     <img
+                      loading="lazy"
                       src={example.image}
                       alt={example.title}
                       width={48}
@@ -240,7 +241,8 @@ export default function Index() {
                 rel="noreferrer"
                 className="flex focused"
               >
-                <img src="/github.svg" alt="Github" width={32} height={32} />
+                <span className="sr-only">Github - Shortcut keys</span>
+                <img loading="lazy" src="/github.svg" alt="Github" width={32} height={32} />
               </a>
             </div>
           </div>
