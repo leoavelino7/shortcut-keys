@@ -37,7 +37,7 @@ type CodeTypeProps = {
 };
 
 const CodeType: FC<CodeTypeProps> = ({ children }) => (
-  <span className="inline bg-gray-200 text-gray-800 mx-1 py-1 px-2 rounded-md">
+  <span className="inline bg-purple-900 bg-opacity-80 text-sm text-white mx-1 p-1 rounded-md">
     {children}
   </span>
 );
@@ -74,55 +74,44 @@ export default function Index() {
               Features and support
             </h3>
           </div>
-          <div className="flex flex-col gap-10 mt-10">
-            <div>
-              <h4 className="text-xl">
-                <b>add(shortcut, handler, options)</b>- Add event to element
-              </h4>
-              <ul className="flex flex-col gap-3 mt-4 ml-5 text-lg">
+          <div className="flex flex-col gap-5 mt-10">
+            <section>
+              <hgroup>
+                <h4 className="text-xl font-bold">Add event to element</h4>
+                <p className="text-gray-800 font-medium mt-1">
+                  <b>Function:</b>
+                  <CodeType>add(shortcut, handler, options)</CodeType>
+                </p>
+              </hgroup>
+              <ul className="flex flex-col gap-3 mt-4 ml-5 text-md md:text-lg list-disc">
                 <li>
-                  <strong>
-                    shortcut * <span className="sr-only">required</span>{" "}
-                  </strong>
-                  <CodeType>
-                    Array{"<"}String{">"} or String
-                  </CodeType>
-                  - Shortcut to trigger action. Example:
-                  <CodeType>
-                    "control+h" or ["control+h", "control+shift+h"]
-                  </CodeType>
+                  <b>
+                    shortcut <span aria-label="Required">*</span>{" "}
+                  </b>
+                  - Shortcut to trigger action.
                 </li>
                 <li>
-                  <strong>
-                    handler * <span className="sr-only">required</span>
-                  </strong>
-                  <CodeType>Function</CodeType>- Action triggered when shortcut
-                  is triggered. Example:{" "}
-                  <CodeType>() {"=>"} console.log("hello");</CodeType>
+                  <b>
+                    handler <span aria-label="Required">*</span>{" "}
+                  </b>
+                  - Action triggered when shortcut is pressed.
                 </li>
                 <li>
-                  <strong>options</strong>
-                  <CodeType>Object</CodeType>- Extra settings
-                  <ul className="flex flex-col gap-3 mt-4 ml-5 text-lg">
+                  <b>options </b>- Extra settings
+                  <ul className="flex flex-col gap-3 mt-4 ml-5 text-md md:text-lg">
                     <li>
-                      <strong>description</strong>
-                      <CodeType>String</CodeType>- Event description
+                      <b>description</b> - Event description
                     </li>
                     <li>
-                      <strong>multiPlatform</strong>
-                      <CodeType>Boolean</CodeType>- When true, 'control' and
-                      'command' are enabled together.
+                      <b>multiPlatform</b> - When true, 'control' and 'command'
+                      are enabled together.
                     </li>
                     <li>
-                      <strong>
-                        prevent * <span className="sr-only">required</span>
-                      </strong>
-                      <CodeType>Boolean</CodeType>- When true, activates
+                      <b>prevent</b> - When true, activates{" "}
                       <CodeType>event.preventDefault()</CodeType>.
                     </li>
                     <li>
-                      <strong>eventType</strong>
-                      <CodeType>String</CodeType>- Sets event type.{" "}
+                      <b>eventType</b> - Sets event type.{" "}
                       <a
                         href="https://developer.mozilla.org/en-US/docs/Web/Events"
                         target="_blank"
@@ -135,49 +124,53 @@ export default function Index() {
                   </ul>
                 </li>
               </ul>
-            </div>
-            <hr className="w-full h-[2px] border-none bg-gray-300" />
-            <div>
-              <h4 className="text-xl">
-                <b>remove(shortcut)</b>- Remove existing event to element
-              </h4>
-              <ul className="flex flex-col gap-3 mt-4 ml-5 text-lg">
+            </section>
+            <hr className="w-full h-1 border-none rounded-lg bg-gray-200" />
+            <section>
+              <hgroup>
+                <h4 className="text-xl font-bold">Remove existing event</h4>
+                <p className="text-gray-800 font-medium mt-1">
+                  <b>Function:</b> <CodeType>remove(shortcut)</CodeType>
+                </p>
+              </hgroup>
+              <ul className="flex flex-col gap-3 mt-4 ml-5 text-md md:text-lg list-disc">
                 <li>
-                  <strong>shortcut</strong>
-                  <CodeType>
-                    Array{"<"}String{">"} or String
-                  </CodeType>
-                  - Shortcut to trigger action. Example:{" "}
-                  <CodeType>
-                    "control+h" or ["control+h", "control+shift+h"]
-                  </CodeType>
-                  . When there is no data, all element events will be removed.
+                  <b>
+                    shortcut <span aria-label="Required">*</span>{" "}
+                  </b>
+                  - Shortcut to be removed.
                 </li>
               </ul>
-            </div>
-            <hr className="w-full h-[2px] border-none bg-gray-300" />
-            <div>
-              <h4 className="text-xl">
-                <b>list()</b>- List all events of element
-              </h4>
-              <p className="my-4">
-                Returns object with all active events information. Example:
-              </p>
-              <pre className="max-w-full bg-gray-800 text-gray-300 rounded-md">
-                {`
-    {
-      "control+h": {
-        "options": {
-          "description": "",
-          "multiPlatform": true,
-          "prevent": true,
-          "eventType": "keydown"
-        }
-      }
-    }
-                `}
-              </pre>
-            </div>
+            </section>
+            <hr className="w-full h-1 border-none rounded-lg bg-gray-200" />
+            <section>
+              <hgroup>
+                <h4 className="text-xl font-bold">
+                  Remove all existing events
+                </h4>
+                <p className="text-gray-800 font-medium mt-1">
+                  <b>Function:</b> <CodeType>removeAll()</CodeType>
+                </p>
+              </hgroup>
+            </section>
+            <hr className="w-full h-1 border-none rounded-lg bg-gray-200" />
+            <section>
+              <hgroup>
+                <h4 className="text-xl font-bold">List all existing events</h4>
+                <p className="text-gray-800 font-medium mt-1">
+                  <b>Function:</b> <CodeType>list()</CodeType>
+                </p>
+              </hgroup>
+
+              <ul className="flex flex-col gap-3 mt-4 ml-5 text-md md:text-lg list-disc">
+                <li>
+                  <b>key</b> - Shortcut to trigger action.
+                </li>
+                <li>
+                  <b>info</b> - All information about the shortcut.
+                </li>
+              </ul>
+            </section>
           </div>
         </div>
       </section>
@@ -212,6 +205,7 @@ export default function Index() {
                 >
                   <div className="flex flex-col justify-center items-center rounded-full w-20 h-20 bg-gray-200">
                     <img
+                      loading="lazy"
                       src={example.image}
                       alt={example.title}
                       width={48}
@@ -247,7 +241,8 @@ export default function Index() {
                 rel="noreferrer"
                 className="flex focused"
               >
-                <img src="/github.svg" alt="Github" width={32} height={32} />
+                <span className="sr-only">Github - Shortcut keys</span>
+                <img loading="lazy" src="/github.svg" alt="Github" width={32} height={32} />
               </a>
             </div>
           </div>

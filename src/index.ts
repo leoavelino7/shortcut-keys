@@ -87,7 +87,6 @@ export const shortcutKeys = (element: HTMLElement | Window) => {
     );
 
   const remove = (shortcut: string): void => {
-    if (shortcut === "all") return removeAll();
     if (!hasKey(shortcutMap, shortcut)) return;
     return element.removeEventListener(
       shortcutMap[shortcut].options.eventType as any,
@@ -95,7 +94,14 @@ export const shortcutKeys = (element: HTMLElement | Window) => {
     );
   };
 
-  const list = () => ({ ...shortcutMap });
+  const list = () => {
+    return Object.entries(shortcutMap).map(([key, info]) => {
+      return {
+        key,
+        info
+      }
+    })
+  };
 
   return {
     /**
@@ -107,17 +113,19 @@ export const shortcutKeys = (element: HTMLElement | Window) => {
     add,
     /**
      * @description Remove exists event to element
-     * @param shortcut - Optional - Shortcut to trigger action. Example: "control+h" or ["control+h", "control+shift+h"]. When there is no data, all element events will be removed.
+     * @param shortcut - Required - Shortcut to trigger action. Example: "control+h" or ["control+h", "control+shift+h"]. When there is no data, all element events will be removed.
      */
     remove,
     /**
      * @description Remove all exists events
      */
     removeAll,
-    /**
+   /**
      * @description List all events of element
-     * @returns Object with all active event information
-     */
+     * @returns List about shortcuts
+     * @property {string} key - Shortcut to trigger action.
+     * @property {Object} info - All information about the shortcut.
+    */
     list,
   };
 };
